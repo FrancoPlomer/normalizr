@@ -1,7 +1,4 @@
-const optionsMaria = require('./options/mariaDB');
-const knex = require('knex')(optionsMaria);
-const optionsSQLITE = require('./options/SQLite3')
-const knex2 = require('knex')(optionsSQLITE)
+
 const express = require('express');
 const { Server: IOServer } = require('socket.io');
 const { Server: HttpServer} = require('http');
