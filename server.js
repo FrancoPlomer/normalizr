@@ -7,8 +7,8 @@ const { faker } = require('@faker-js/faker');
 const messages = require('./models/mensajes')
 const config = require("./config.js");
 const mongoose = require("mongoose");
-const {normalize, schema } = require("normalizr");
 const util = require('util');
+const { normalizeMessages, messageDenormalize } = require('./modules/normalize');
 const app = express();
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer);
@@ -145,13 +145,7 @@ io.on('connection', (socket) => {
         }
         let AllofMyMessages = await addMessages(newMessage);
         let normalizedComments;
-        const authorSchema = new schema.Entity('author');
-        const messagesSchema = new schema.Entity('text');
-
-        const messSchema = new schema.Entity('mensajes', {
-            author: [ authorSchema ],
-            text: [ messagesSchema ]
-        })
+        let denormalizedComments;
         AllofMyMessages.map((message) =>
         {
             const filter = toNormalice.autores.find(autor => autor.id === message.author.id);
@@ -160,9 +154,10 @@ io.on('connection', (socket) => {
             }
             toNormalice.mensajes.push(message.text)
         })
-        normalizedComments = normalize(toNormalice, messSchema)
-        io.sockets.emit('mensajes', normalizedComments.entities.mensajes.undefined);
-        print(normalizedComments)
+        normalizedComments = normalizeMessages(toNormalice)
+        denormalizedComments = messageDenormalize(normalizedComments)
+        io.sockets.emit('mensajes', normalizedComments.entities.messages.undefined);
+        print(denormalizedComments)
     })
 })
 

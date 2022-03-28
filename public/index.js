@@ -74,7 +74,6 @@ formMessage.addEventListener("submit", (e) => {
 })
 
 Socket.on('mensajes', data => {
-    console.log(data)
     const hoy = new Date();
     const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear();
     const hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
@@ -93,7 +92,4 @@ Socket.on('mensajes', data => {
             allMessages.appendChild(mensaje);
         }
     }) 
-
-
-
 })
